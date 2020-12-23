@@ -1,13 +1,12 @@
 class TasksController < ApplicationController
   before_action :require_user_logged_in
-  before_action :correct_user, only: [:destroy , :show]
+  before_action :correct_user, only: [:destroy,:show ,:edit ,:update]
   #before_action :correct_user
   before_action :set_task, only: [:edit,:show, :update, :destroy]
  
   def index
-
-    @user = User.find(session[:user_id])
-    @tasks = @user.tasks
+    user = User.find(session[:user_id])
+    @tasks = user.tasks
   end
 
   def show
@@ -36,7 +35,7 @@ class TasksController < ApplicationController
     else
       @tasks = current_user.tasks.order(id: :desc)
       flash.now[:danger] = 'タスクが投稿されませんでした'
-      render root_url
+      render :new
     end
   end
   
