@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
-  before_action :require_user_logged_in, only: [:index, :show]
-  before_action :correct_user, only: [:destroy,:show,]
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :require_user_logged_in, only: [:index, :show ,]
+  before_action :correct_user, only: [:destroy , :show]
+  before_action :set_task, only: [:edit, :update, :destroy]
  
   def index
 
@@ -10,6 +10,14 @@ class TasksController < ApplicationController
   end
 
   def show
+    #if Task.select('user_id').find(params[:id]) == current_user
+
+       @task = Task.find(params[:id])
+       
+       
+    #else
+      #render 'tasks/index'
+    #end
   end
 
   def new
@@ -33,7 +41,7 @@ class TasksController < ApplicationController
       flash[:success] = 'タスクが正常に投稿されました'
       redirect_to root_url
     else
-      @tasks = current_user.microposts.order(id: :desc)
+      @tasks = current_user.tasks.order(id: :desc)
       flash.now[:danger] = 'タスクが投稿されませんでした'
       render 'tasks/index'
     end
@@ -73,11 +81,10 @@ class TasksController < ApplicationController
   end
 
   def correct_user
-    #@task = current_user.tasks.find_by(user_id: params[:id])
-    #unless @task
-      #redirect_to root_url
-    #end
+    @task = current_user.tasks.find_by(id: params[:id])
+    unless @task
+      redirect_to root_url
+    end
   end
 end
-
 
