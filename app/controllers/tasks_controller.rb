@@ -1,7 +1,8 @@
 class TasksController < ApplicationController
-  before_action :require_user_logged_in, only: [:index, :show ,]
+  before_action :require_user_logged_in
   before_action :correct_user, only: [:destroy , :show]
-  before_action :set_task, only: [:edit, :update, :destroy]
+  #before_action :correct_user
+  before_action :set_task, only: [:edit,:show, :update, :destroy]
  
   def index
 
@@ -10,14 +11,6 @@ class TasksController < ApplicationController
   end
 
   def show
-    #if Task.select('user_id').find(params[:id]) == current_user
-
-       @task = Task.find(params[:id])
-       
-       
-    #else
-      #render 'tasks/index'
-    #end
   end
 
   def new
@@ -43,7 +36,7 @@ class TasksController < ApplicationController
     else
       @tasks = current_user.tasks.order(id: :desc)
       flash.now[:danger] = 'タスクが投稿されませんでした'
-      render 'tasks/index'
+      render root_url
     end
   end
   
@@ -62,10 +55,14 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    @task.destroy
-
-    flash[:success] = 'タスクは正常に削除されました'
-    redirect_to tasks_url
+    
+    if  @task.destroy
+      flash[:success] = 'タスクは正常に削除されました'
+      redirect_to root_url
+    else
+      flash.now[:danger] = 'タスクは削除されませんでした。'
+      render :edit
+    end
   end
 
   private
