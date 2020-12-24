@@ -57,7 +57,7 @@ class TasksController < ApplicationController
       redirect_to root_url
     else
       flash.now[:danger] = 'タスクは削除されませんでした。'
-      render :edit
+      redirect_to @task
     end
   end
 
