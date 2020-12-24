@@ -4,7 +4,7 @@ class TasksController < ApplicationController
 
  
   def index
-     @tasks = User.find(session[:user_id]).tasks
+      @tasks =current_user.tasks
   end
 
   def show
@@ -72,8 +72,6 @@ class TasksController < ApplicationController
     @task = current_user.tasks.find_by(id: params[:id])
     unless @task
       redirect_to root_url
-    else 
-      @task = Task.find(params[:id])
     end
   end
 end
